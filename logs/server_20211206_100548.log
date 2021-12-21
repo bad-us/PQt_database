@@ -1,0 +1,20 @@
+2021-12-06 10:05:49,409 INFO server_db.py user login: client_1 192.168.1.4:8888
+2021-12-06 10:05:49,410 DEBUG server_db.py user_login result query:SELECT "All_Users".id AS "All_Users_id", "All_Users".login_name AS "All_Users_login_name", "All_Users".last_login AS "All_Users_last_login" 
+FROM "All_Users" 
+WHERE "All_Users".login_name = ?
+2021-12-06 10:05:49,414 INFO server_db.py new user, add to DB client_1 192.168.1.4:8888
+2021-12-06 10:05:49,748 INFO server_db.py user login: client_2 192.168.1.5:7777
+2021-12-06 10:05:49,776 DEBUG server_db.py user_login result query:SELECT "All_Users".id AS "All_Users_id", "All_Users".login_name AS "All_Users_login_name", "All_Users".last_login AS "All_Users_last_login" 
+FROM "All_Users" 
+WHERE "All_Users".login_name = ?
+2021-12-06 10:05:49,884 INFO server_db.py new user, add to DB client_2 192.168.1.5:7777
+2021-12-06 10:05:50,054 INFO server_db.py user login: client_3 192.168.0.0:9999
+2021-12-06 10:05:50,055 DEBUG server_db.py user_login result query:SELECT "All_Users".id AS "All_Users_id", "All_Users".login_name AS "All_Users_login_name", "All_Users".last_login AS "All_Users_last_login" 
+FROM "All_Users" 
+WHERE "All_Users".login_name = ?
+2021-12-06 10:05:50,066 INFO server_db.py new user, add to DB client_3 192.168.0.0:9999
+2021-12-06 10:05:50,336 INFO server_db.py user login: client_4 192.168.4.4:4444
+2021-12-06 10:05:50,337 DEBUG server_db.py user_login result query:SELECT "All_Users".id AS "All_Users_id", "All_Users".login_name AS "All_Users_login_name", "All_Users".last_login AS "All_Users_last_login" 
+FROM "All_Users" 
+WHERE "All_Users".login_name = ?
+2021-12-06 10:05:50,406 INFO server_db.py new user, add to DB client_4 192.168.4.4:4444
