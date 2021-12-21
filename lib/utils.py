@@ -1,18 +1,40 @@
-""" общие утилиты """
-
 import json
-import socket
 import sys
-from lib.errors import IncorrectDataRecivedError, NonDictInputError
-from lib.variables import PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP, MAX_CONNECTIONS, CLIENT_LISTEN
+import socket
+sys.path.append('../')
+from lib.variables import *
+from lib.errors import *
+from logs.decoration_log import log
 
 
+@log
+def get_message(client):
+    encoded_response = client.recv(PACKAGE_LENGTH)
+    if isinstance(encoded_response, bytes):
+        json_response = encoded_response.decode(ENCODING)
+        response = json.loads(json_response)
+        if isinstance(response, dict):
+            return response
+        else:
+            raise IncorrectDataRecivedError
+    else:
+        raise IncorrectDataRecivedError
+
+@log
+def send_message(sock, message):
+    if not isinstance(message, dict):
+        raise NonDictInputError
+    js_message = json.dumps(message)
+    encoded_message = js_message.encode(ENCODING)
+    sock.send(encoded_message)
+
+
+def create_socket():
+    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+# Проверка что строка является действительным адресом IPv4.
 def validate_ip(ip_str):
-    """ Проверка что строка является действительным адресом IPv4.
-    Возавращает True / False
-    :param ip_str:
-    :return:
-    """
     tmp_str = ip_str.split('.')
     if len(tmp_str) != 4:
         return False
@@ -24,13 +46,8 @@ def validate_ip(ip_str):
             return False
     return True
 
-
-def validate_port(ip_rort):
-    """ Проверка что строка может являться разрешенным портом
-    Возавращает True / False
-    :param ip_rort:
-    :return:
-    """
+# Проверка что строка может являться разрешенным портом
+def validate_port(ip_port):
     try:
         ip_port = int(ip_port)
         if ip_port < 1025 or ip_port > 65535:
@@ -61,7 +78,7 @@ def server_settings():
         elif '-i' in sys.argv:
             server_address = sys.argv[sys.argv.index('-i') + 1]
         else:
-            server_address = DEFAULT_IP
+            server_address = DEFAULT_IP_ADDRESS
         # if not validate_ip(server_address) and server_address != '':
         #    raise ValueError
 
@@ -80,42 +97,3 @@ def server_settings():
         sys.exit(1)
     return [server_address, server_port, client_listen]
 
-
-def create_socket():
-    """ создаем сокет для соединения """
-    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-
-def get_message(client):
-    '''
-    Утилита приёма и декодирования сообщения
-    принимает байты выдаёт словарь, если принято что-то другое отдаёт ошибку значения
-    :param client:
-    :return:
-    '''
-
-    response_bytes = client.recv(PACKAGE_LENGTH)
-    # print(f"response_bytes={response_bytes}")
-    if isinstance(response_bytes, bytes):
-        json_response = response_bytes.decode(ENCODING)
-        response = json.loads(json_response)
-        # print(f"response={response}")
-        if isinstance(response, dict):
-            return response
-        raise IncorrectDataRecivedError  # ValueError
-    raise IncorrectDataRecivedError  # ValueError
-
-
-def send_message(sock_obj, message):
-    '''
-    Утилита кодирования и отправки сообщения
-    принимает словарь и отправляет его
-    :param sock_obj:
-    :param message:
-    :return:
-    '''
-    if not isinstance(message, dict):
-        raise NonDictInputError
-    js_message = json.dumps(message)
-    encoded_message = js_message.encode(ENCODING)
-    sock_obj.send(encoded_message)
